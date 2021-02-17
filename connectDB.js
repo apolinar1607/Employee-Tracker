@@ -29,6 +29,8 @@ const runTracker = () => {
         message: 'What would you like to do?',
         choices: [
             'View All Employees',
+            'View All Departments',
+            'View All Roles',
             'View All Employees By Department',
             'View All Employees By Manager',
             'Add Employee',
@@ -43,6 +45,12 @@ const runTracker = () => {
         switch (answer.action){
             case 'View All Employees': 
                 viewAll();
+                break;
+            case 'View All Departments':
+                viewAllDepartments();
+                break;
+            case 'View All Roles':
+                viewAllRoles();
                 break;
             case 'View All Employees By Department':
                 viewByDepartment();
@@ -94,6 +102,25 @@ const viewAll = () => {
                                  runTracker();
     })
 }
+//TO VIEW ALL DEPARTMENTS
+const viewAllDepartments = () => {
+    const depQuery = `SELECT * FROM department`
+    connection.query(depQuery, (err, data) => {
+      if (err) throw err;
+      console.table(data);
+      runTracker();
+    })
+  };
+
+//TO VIEW ALL ROLES
+const viewAllRoles = () => {
+    const roleQuery = `SELECT * FROM role`
+    connection.query(roleQuery, (err, data) => {
+      if (err) throw err;
+      console.table(data);
+      runTracker();
+    })
+  };
 
 //TO DISPLAY EMPLOYEES BY DEPARTMENT
 const viewByDepartment = () => {
