@@ -62,6 +62,10 @@ VALUES ("Accounting Assistant", 10000, 4);
 INSERT INTO role (title, salary, department_id)					-- role id 15
 VALUES ("Accounting Assistant", 10000, 4);
 
+-- Recent hiring Logistics Manager
+INSERT INTO role (title, salary, department_id)					-- role id 16
+VALUES ("Purchaser", 15000, 2);
+
 
 INSERT INTO employee (first_name, last_name, role_id)
 VALUES ("Peter", "Dave", 1);
@@ -75,8 +79,8 @@ VALUES ("Jim", "Lopez", 13, 12);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Maricar", "Diaz", 11, 8);
 
-INSERT INTO employee (first_name, last_name, role_id)
-VALUES ("Philip", "Laroza", 6);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Philip", "Laroza", 6, 16);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Jason", "Cabral", 4, 1);
@@ -87,11 +91,11 @@ VALUES ("Jim", "Chua", 2, 1);
 INSERT INTO employee (first_name, last_name, role_id)
 VALUES ("Junar", "Mendoza", 8);
 
-INSERT INTO employee (first_name, last_name, role_id)
-VALUES ("Janet", "Price", 5);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Janet", "Price", 5, 16);
 
-INSERT INTO employee (first_name, last_name, role_id)
-VALUES ("Mark", "Jamison", 7);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Mark", "Jamison", 7, 16);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Steph", "Nadal", 9, 8);
@@ -107,4 +111,7 @@ VALUES ("Shane", "Mill", 14, 12);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Margie", "Cadaba", 15, 12);
+
+INSERT INTO employee (first_name, last_name, role_id)
+VALUES ("Rowena", "Lim", 16);
 

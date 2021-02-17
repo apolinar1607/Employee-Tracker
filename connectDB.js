@@ -13,9 +13,11 @@ const connection = mysql.createConnection({
 connection.connect(err => {
     if (err) throw err;
     console.log(`
+
 #############################
 EMPLOYEE TRACKER APPLICATION
 #############################
+
 `);
     runTracker();
 });
@@ -49,9 +51,16 @@ const runTracker = () => {
                 break;
             case 'Add Employee':
                 addEmployee();
+                break;
+            case 'Remove Employee':
+                removeEmployee();
+                break;
             case 'Update Employee Role':
-                updateEmployee();
+                updateEmployeeRole();
+                break;
             case 'Update Employee Manager':
+                updateEmployeeManager();
+                break;
             case 'Exit':
                 connection.end();
                 break;
@@ -62,7 +71,7 @@ const runTracker = () => {
     });
  
 };
- //
+ //TO VIEW ALL EMPLOYEES
 const viewAll = () => {
     connection.query(`SELECT employee.id, 
                         employee.first_name, 
@@ -156,5 +165,80 @@ const viewByManager = () => {
         })
     })
 }
+
+const addEmployee = () => {
+    const addQuery = `SELECT employee.id, 
+                        employee.first_name, 
+                        employee.last_name, 
+                        employee.role_id, 
+                        role.title, 
+                        department.name,
+                        role.salary, 
+                        employee.manager_id 
+                    FROM employee
+                    INNER JOIN role on role.id = employee.role_id
+                    INNER JOIN department ON department.id = role.department_id`
+    connection.query(addQuery, (err, res) => {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+              type: "input",
+              name: "first_name",
+              message: "Please enter employee first name"
+            }, {
+              type: "input",
+              name: "last_name",
+              message: "Please enter employee last name"
+            }, {
+              type: "list",
+              name: "role",
+              message: "Please select employee title",
+              choices: res.map(role => {
+                return { name: role.title, value: role.role_id }
+              })
+            }, {
+              type: "input",
+              name: "manager",
+              message: "Please enter employee manager id"
+            }])
+            .then(answer => {
+              console.log(answer);
+              connection.query(
+                "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)",
+                [answer.first_name, answer.last_name, answer.role, answer.manager],(err) => {
+                  if (err) throw err
+                  console.log(`${answer.first_name} ${answer.last_name} added as a new employee`)
+                  runTracker();
+                })
+            })
+        })
+      };
+
+//TO REMOVE EMPLOYEE
+const removeEmployee = () => {
+    let query1 = `SELECT * FROM employee`
+    connection.query(query1, (err, res) => {
+    if (err) throw err;
+    inquirer.prompt([{
+      type: "list",
+      name: "emId",
+      message: "Please select employee to remove",
+      choices: res.map(employee => {
+        return { name: `${employee.first_name} ${employee.last_name}`, value: employee.id }
+      })
+    }])
+      .then(answer => {
+        let query2 = `DELETE FROM employee WHERE ?`
+        connection.query(query2, [{ id: answer.emId }], (err) => {
+          if (err) throw err;
+          console.log("Employee removed");
+          runTracker();
+        })
+      })
+  })
+};
+
+//TO UPDATE EMPLOYEE ROLE
+
 
 
