@@ -32,9 +32,10 @@ const runTracker = () => {
             'View All Employees By Department',
             'View All Employees By Manager',
             'Add Employee',
+            'Add Role',
+            'Add Department',
             'Remove Employee',
             'Update Employee Role',
-            'Update Employee Manager',
             'Exit'
         ]
     })
@@ -52,14 +53,17 @@ const runTracker = () => {
             case 'Add Employee':
                 addEmployee();
                 break;
+            case 'Add Role':
+                addRole();
+                break;
+            case 'Add Department':
+                addDepartment();
+                break;
             case 'Remove Employee':
                 removeEmployee();
                 break;
             case 'Update Employee Role':
                 updateEmployeeRole();
-                break;
-            case 'Update Employee Manager':
-                updateEmployeeManager();
                 break;
             case 'Exit':
                 connection.end();
@@ -166,6 +170,7 @@ const viewByManager = () => {
     })
 }
 
+//TO ADD EMPLOYEE
 const addEmployee = () => {
     const addQuery = `SELECT employee.id, 
                         employee.first_name, 
@@ -214,6 +219,67 @@ const addEmployee = () => {
         })
       };
 
+
+//TO ADD A NEW ROLE
+const addRole = () => {
+        let query1 = `SELECT * FROM role`
+        connection.query(query1, (err, data) => {
+          if (err) throw err
+          inquirer.prompt([
+            {
+              type: "input",
+              name: "roleId",
+              message: "Please enter id for new role"
+            }, {
+              type: "input",
+              name: "role",
+              message: "Please enter title of new role"
+            }, {
+              type: "input",
+              name: "salary",
+              message: "Please enter salary for new role"
+            }, {
+              type: "input",
+              name: "deptId",
+              message: "Please enter department id for new role"
+            }])
+            .then((answers) => {
+              let query2 = `INSERT INTO role VALUES (?,?,?,?)`
+              connection.query(query2, [answers.roleId, answers.role, answers.salary, answers.deptId], (err) => {
+                if (err) throw err;
+                console.log(`${answers.role} added as new role`)
+                runTracker();
+              })
+            })
+        })
+      }
+      
+//TO ADD A NEW DEPARTMENT
+const addDepartment = () => {
+        let query1 = `SELECT * FROM department`
+        connection.query(query1, (err, res) => {
+          if (err) throw err
+          inquirer.prompt([{
+            type: "input",
+            name: "deptId",
+            message: "Please enter id for new department"
+          }, {
+            type: "input",
+            name: "deptName",
+            message: "Please enter name for new department"
+          }])
+            .then(answers => {
+              let query2 = `INSERT INTO department VALUES (?,?)`
+              connection.query(query2, [answers.deptId, answers.deptName], (err) => {
+                if (err) throw err
+                console.log(`${answers.deptName} added as a new department`)
+                runTracker();
+              })
+            })
+        })
+      };
+
+
 //TO REMOVE EMPLOYEE
 const removeEmployee = () => {
     let query1 = `SELECT * FROM employee`
@@ -239,6 +305,73 @@ const removeEmployee = () => {
 };
 
 //TO UPDATE EMPLOYEE ROLE
-
+const updateEmployeeRole = () => {
+    let query = ("SELECT * FROM employee");
+  
+    connection.query(query, (err, response) => {
+  
+      const employees = response.map(element => {
+        return {
+          name: `${element.first_name} ${element.last_name}`,
+          value: element.id
+        }
+      });
+  
+      inquirer.prompt([{
+        type: "list",
+        name: "employeeId",
+        message: "Which employees role do you want to update",
+        choices: employees
+      }])
+        .then(input1 => {
+          connection.query("SELECT * FROM role", (err, data) => {
+  
+            const roles = data.map(role => {
+              return {
+                name: role.title,
+                value: role.id
+              }
+            });
+  
+            inquirer.prompt([{
+              type: "list",
+              name: "roleId",
+              message: "What's the new role",
+              choices: roles
+            }])
+              .then(input2 => {
+                const query1 = `UPDATE employee
+                                SET employee.role_id = ? 
+                                WHERE employee.id = ?`
+                connection.query(query1, [input2.roleId, input1.employeeId], (err, res) => {
+                  var tempPosition;
+                  // will return the updated position
+                  for (var k = 0; k < roles.length; k++) {
+                    if (roles[k].value == input2.roleId) {
+                      tempPosition = roles[k].name;
+                    }
+                  }
+                  // will return the employee
+                  var tempName;
+                  for (var g = 0; g < employees.length; g++) {
+                    if (employees[g].value == input1.employeeId) {
+                      tempName = employees[g].name;
+                    }
+                  }
+  
+                  if (res.changedRows === 1) {
+                    console.log(`Successfully updated ${tempName} to position of ${tempPosition}`);
+                  } else {
+                    console.log(`Error: ${tempName}'s current position is ${tempPosition}`)
+                  }
+                  // console.log(res.changedRows);
+                  runTracker();
+                })
+              })
+          })
+        })
+    })
+  };
+  
 
 

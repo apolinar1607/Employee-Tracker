@@ -64,7 +64,7 @@ VALUES ("Accounting Assistant", 10000, 4);
 
 -- Recent hiring Logistics Manager
 INSERT INTO role (title, salary, department_id)					-- role id 16
-VALUES ("Purchaser", 15000, 2);
+VALUES ("Logistics Manager", 15000, 2);
 
 
 INSERT INTO employee (first_name, last_name, role_id)
