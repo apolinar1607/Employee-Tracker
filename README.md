@@ -17,7 +17,7 @@
   
   ## Installation
   
-  This application make use of node npm packages namely, inquirer, console log, and MySQL.The packages were installed using a package.json file. The folder node_modules was included in the .gitignore directory to minimize the amount of files saved in github.
+  This application make use of node npm packages namely, inquirer, console.table, and MySQL.The packages were installed using a package.json file. The folder node_modules was included in the .gitignore directory to minimize the amount of files saved in github.
 
   This application is executed in the command line thus, it is neither deployed thru Heroku or github.
 
